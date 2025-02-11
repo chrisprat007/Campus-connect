@@ -3,7 +3,7 @@ import Post from "../models/Post.js";
 
 const router = express.Router();
 
-// Get all posts from all departments
+
 router.get("/posts", async (req, res) => {
     try {
         const posts = await Post.find().populate("department", "name role");
