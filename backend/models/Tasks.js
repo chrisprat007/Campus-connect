@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
-const postSchema = new mongoose.Schema({
-    title: {
+const taskSchema = new mongoose.Schema({
+    name: {
         type: String,
         required: true,
     },
@@ -10,7 +10,7 @@ const postSchema = new mongoose.Schema({
         required: true,
     },
     images: {
-        type: Buffer,  // Store the image data in Buffer format
+        type: Buffer,
         required: false,
     },
     department: {
@@ -18,8 +18,12 @@ const postSchema = new mongoose.Schema({
         ref: "Department",
         required: true,
     },
+    status: {
+        type: String,
+        required: true,
+    }
 });
 
-const Post = mongoose.model('Post', postSchema);
+const Tasks = mongoose.model('Tasks', taskSchema);
 
-export default Post;
+export default Tasks;

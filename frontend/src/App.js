@@ -1,13 +1,12 @@
-import logo from './logo.svg';
-import './App.css';
-import AppRouter from './routes/AppRouter';
+import AppRouter from "./routes/AppRouter";
+import { ApiProvider } from "./context/ApiContext";
+import { use, useEffect } from "react";
 
-function App() {
+export default function App() {
+  
   return (
-    <div>
+    <ApiProvider>
       <AppRouter/>
-    </div>
-  )
+    </ApiProvider>
+  );
 }
-
-export default App;

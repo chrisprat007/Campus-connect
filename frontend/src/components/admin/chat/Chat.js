@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from "react";
 import socket from "../../../services/socket";
-
+import api from "../../../utils/api";
 const Chat = ({ senderId, receiverId }) => {
     const [messages, setMessages] = useState([]); // Stores chat messages
     const [newMessage, setNewMessage] = useState(""); // Stores the current input
 
     useEffect(() => {
-        fetch(`http://localhost:8000/message?sender=${senderId}&receiver=${receiverId}`)
+        api.get(`http://localhost:8000/message?sender=${senderId}&receiver=${receiverId}`)
             .then((res) => res.json())
             .then((data) => setMessages(data.messages));
-
 
         socket.on("receiveMessage", (message) => {
             console.log(message);
@@ -29,12 +28,10 @@ const Chat = ({ senderId, receiverId }) => {
             message: newMessage,
         };
 
-        // Emit the message to the server
         socket.emit("sendMessage", message);
 
-        // Update the chat locally
+
         setMessages((prev) => [...prev, message]);
-        console.log(messages);
         setNewMessage("");
     };
 

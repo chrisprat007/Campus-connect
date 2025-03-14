@@ -1,14 +1,15 @@
 import mongoose from "mongoose";
 
 const DepartmentSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-    role: { 
+    name: { 
         type: String, 
         required: true, 
         enum: ["Municipal Corporation", "Traffic Police", "Public Works", "Water Supply"] 
     },
-    city: { type: mongoose.Schema.Types.ObjectId, ref: "City", required: true },
-    posts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
+    role: { type: String, required: true },
+    college: { type: mongoose.Schema.Types.ObjectId, ref: "College", required: true },
+    secretKey: { type: String, required: true },
+    tasks: [{ type: mongoose.Schema.Types.ObjectId, ref: "Tasks", required: true }],
 });
 
 export default mongoose.model("Department", DepartmentSchema);
