@@ -1,10 +1,16 @@
+import Analytics from "../Department/Analytics";
+
 export default function Dashboard() {
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
      
       <h1 className="text-3xl font-bold text-gray-900 mb-4">Dashboard</h1>
-      <p className="text-gray-700 mb-6">Manage cities, departments, and posts efficiently.</p>
+      <p className="text-gray-700 mb-6">Manage college, departments, and students efficiently.</p>
 
+      <div className="bg-white p-6 rounded-lg shadow-md mx-6">
+              <h2 className="text-xl font-semibold mb-4">Placement Analytics</h2>
+              <Analytics departmentId="xyz" />
+        </div>
   
       <h2 className="text-2xl font-semibold text-gray-800 mb-4">Features</h2>
 

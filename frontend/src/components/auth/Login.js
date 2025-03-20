@@ -23,6 +23,7 @@ export default function Login() {
       console.log("Login Success:", response.data);
       setLoading(false);
       setCityLogged(true);
+      sessionStorage.setItem("cityLogged",true);
       sessionStorage.setItem("cityId",response.data.id);
       sessionStorage.setItem("cityName",response.data.name);
       setCityId(response.data.id);

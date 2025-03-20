@@ -18,7 +18,7 @@ export default function ChatBoxDepartment({ cityName, cityId }) {
             sender: departmentId,
             senderModel: "Department",
             receiver: cityId,
-            receiverModel: "City",
+            receiverModel: "College",
           },
         });
         if (response.data.messages) {
@@ -45,9 +45,9 @@ export default function ChatBoxDepartment({ cityName, cityId }) {
         (msg.sender === departmentId &&
           msg.senderModel === "Department" &&
           msg.receiver === cityId &&
-          msg.receiverModel === "City") ||
+          msg.receiverModel === "College") ||
         (msg.sender === cityId &&
-          msg.senderModel === "City" &&
+          msg.senderModel === "College" &&
           msg.receiver === departmentId &&
           msg.receiverModel === "Department")
       ) {
@@ -69,7 +69,7 @@ export default function ChatBoxDepartment({ cityName, cityId }) {
         sender: departmentId,
         senderModel: "Department",
         receiver: cityId,
-        receiverModel: "City",
+        receiverModel: "College",
         message,
       };
       socket.emit("sendMessage", msg);

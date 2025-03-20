@@ -35,17 +35,18 @@ export default function DepartmentLogin() {
     setError("");
     try {
       console.log(secretKey);
-      const response = await api.post("/departments/login", { department, city, secretKey });
+      const response = await api.post("/departments/login", { department, college:city, secretKey });
       
       setDepartmentLogged(true);
       if(response.status===200){
         navigate("/departments/dashboard");
       }
       console.log(response.data);
+      sessionStorage.setItem("departmentLogged",true);
       sessionStorage.setItem("departmentId",response.data.departmentId);
       sessionStorage.setItem("departmentName",response.data.departmentName);
-      sessionStorage.setItem("cityId",response.data.cityId);
-      sessionStorage.setItem("cityName",response.data.cityName);
+      sessionStorage.setItem("cityId",response.data.collegeId);
+      sessionStorage.setItem("cityName",response.data.collegeName);
       
     } catch (err) {
       setError(err.response?.data?.message || "Invalid credentials");

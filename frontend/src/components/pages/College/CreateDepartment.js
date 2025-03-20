@@ -2,14 +2,15 @@ import { useState } from "react";
 import api from "../../../utils/api";
 
 export default function CreateDepartment({ cityId, onSuccess }) {
-  const [name, setName] = useState("Municipal Corporation");
+  const [name, setName] = useState("CSE");
   const [role, setRole] = useState("");
   const [secretKey, setSecretKey] = useState("");
   const [confirmSecretKey, setConfirmSecretKey] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const names = ["Municipal Corporation", "Traffic Police", "Public Works", "Water Supply"];
+  const names = ["CSE", "IT", "ECE", "EEE", "ME", "CE", "CHE", "BME", "AE", "AUTO", "BT", "IE", "MNE", "MT", "RA", "DSAI"];
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,10 +24,10 @@ export default function CreateDepartment({ cityId, onSuccess }) {
     }
 
     try {
-      const payload = { name, role, city: cityId, secretKey,tasks:[] };
+      const payload = { name, role, college: cityId, secretKey,tasks:[] };
       console.log(payload);
       await api.post("/departments/add", payload);
-      setName("Municipal Corporation");
+      setName("CSE");
       setRole("");
       setSecretKey("");
       setConfirmSecretKey("");

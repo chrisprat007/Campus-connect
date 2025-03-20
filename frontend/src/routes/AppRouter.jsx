@@ -9,6 +9,7 @@ import DepartmentLogin from "../components/auth/DepartmentLogin";
 import DepartmentDashboard from "../components/pages/Department/DepartmentDashboard";
 import DepartmentCollaboratePage from "../components/pages/Department/DepartmentCollaboratePage";
 import CityCollaboratePage from "../components/pages/College/CityCollaboratePage";
+import StudentsPage from "../components/pages/StudentsPage";
 
 export default function AppRouter() {
   const { cityLogged,departmentLogged } = useApi();
@@ -31,6 +32,7 @@ export default function AppRouter() {
       )}
       {departmentLogged && (
         <Routes>
+        <Route path="/departments/students" element={<StudentsPage />} />
         <Route path="*" element={<DepartmentDashboard />} />
         <Route path="/departments/dashboard" element={<DepartmentDashboard />} />
         <Route path="/departments/collaborate" element={<DepartmentCollaboratePage/>} />

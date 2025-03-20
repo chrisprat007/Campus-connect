@@ -2,21 +2,19 @@ import { useState, useEffect, useRef } from "react";
 import socket from "../../../services/socket";
 import api from "../../../utils/api";
 
-export default function ChatBoxCity({ departmentName, departmentId }) {
+export default function ChatBoxCollege({ departmentName, departmentId }) {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const messagesEndRef = useRef(null);
-  // City admin logged in; its ID is in sessionStorage
-  const cityId = sessionStorage.getItem("cityId");
+  const collegeId = sessionStorage.getItem("cityId");
 
-  // Load chat history between the city and the selected department
   useEffect(() => {
     async function fetchChatHistory() {
       try {
         const response = await api.get("http://localhost:8000/message", {
           params: {
-            sender: cityId,
-            senderModel: "City",
+            sender: collegeId,
+            senderModel: "College",
             receiver: departmentId,
             receiverModel: "Department",
           },
@@ -29,25 +27,24 @@ export default function ChatBoxCity({ departmentName, departmentId }) {
       }
     }
     fetchChatHistory();
-  }, [cityId, departmentId]);
+  }, [collegeId, departmentId]);
 
-  // Set up socket connection and event listeners
   useEffect(() => {
     if (!socket.connected) {
       socket.connect();
     }
-    socket.emit("joinRoom", cityId);
+    socket.emit("joinRoom", collegeId);
 
     const receiveMessageListener = (msg) => {
       if (
-        (msg.sender === cityId &&
-          msg.senderModel === "City" &&
+        (msg.sender === collegeId &&
+          msg.senderModel === "College" &&
           msg.receiver === departmentId &&
           msg.receiverModel === "Department") ||
         (msg.sender === departmentId &&
           msg.senderModel === "Department" &&
-          msg.receiver === cityId &&
-          msg.receiverModel === "City")
+          msg.receiver === collegeId &&
+          msg.receiverModel === "College")
       ) {
         setMessages((prev) => [...prev, msg]);
       }
@@ -57,15 +54,15 @@ export default function ChatBoxCity({ departmentName, departmentId }) {
 
     return () => {
       socket.off("receiveMessage", receiveMessageListener);
-      socket.emit("leaveRoom", cityId);
+      socket.emit("leaveRoom", collegeId);
     };
-  }, [cityId, departmentId]);
+  }, [collegeId, departmentId]);
 
   const sendMessage = () => {
     if (message.trim()) {
       const msg = {
-        sender: cityId,
-        senderModel: "City",
+        sender: collegeId,
+        senderModel: "College",
         receiver: departmentId,
         receiverModel: "Department",
         message,
@@ -85,16 +82,14 @@ export default function ChatBoxCity({ departmentName, departmentId }) {
       <div className="bg-green-600 text-white p-3 rounded-t-lg flex justify-between items-center">
         <h2 className="text-lg font-semibold">Chat with {departmentName}</h2>
       </div>
-
       <div className="p-4 h-60 overflow-y-auto">
         {messages.map((msg, index) => (
           <p key={index} className="text-sm">
-            <strong>{msg.sender === cityId ? "You" : departmentName}</strong>: {msg.message}
+            <strong>{msg.sender === collegeId ? "You" : departmentName}</strong>: {msg.message}
           </p>
         ))}
         <div ref={messagesEndRef} />
       </div>
-
       <div className="flex p-2 border-t">
         <input
           type="text"
@@ -104,10 +99,7 @@ export default function ChatBoxCity({ departmentName, departmentId }) {
           className="flex-1 p-2 border rounded-l-md focus:outline-none"
           placeholder="Type a message..."
         />
-        <button
-          onClick={sendMessage}
-          className="bg-green-600 text-white px-4 py-2 rounded-r-md"
-        >
+        <button onClick={sendMessage} className="bg-green-600 text-white px-4 py-2 rounded-r-md">
           Send
         </button>
       </div>

@@ -9,13 +9,13 @@ import departmentRoutes from "./routes/department.js";
 import collegeRoutes from "./routes/college.js";
 import messageRoutes from "./routes/message.js";
 import tasksRoutes from "./routes/tasks.js";
-
+import studentRoutes from "./routes/student.js";
+import analyticsRouter from "./routes/analytics.js";
+import trainRouter from "./routes/train.js";
+import placementRouter from "./routes/placement.js";
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server, {
-  cors: { origin: "*" },
-});
-
+const io = new Server(server, { cors: { origin: "*" } });
 const PORT = 8000;
 app.use(cors());
 app.use(bodyParser.json());
@@ -32,13 +32,15 @@ app.use("/departments", departmentRoutes);
 app.use("/city", collegeRoutes);
 app.use("/message", messageRoutes);
 app.use("/tasks", tasksRoutes);
-
+app.use("/students", studentRoutes);
+app.use("/analytics", analyticsRouter);
+app.use("/train", trainRouter);
+app.use("/placements",placementRouter);
 let userRooms = {};
 
 io.on("connection", (socket) => {
   console.log(`User connected: ${socket.id}`);
 
-  // Join a room identified by the user’s ID (could be a College or Department)
   socket.on("joinRoom", (userId) => {
     socket.join(userId);
     userRooms[socket.id] = userId;
@@ -51,11 +53,9 @@ io.on("connection", (socket) => {
   });
 
   socket.on("sendMessage", async (data) => {
-    // Data should include: sender, senderModel, receiver, receiverModel, message
     try {
       const newMessage = new Message(data);
       await newMessage.save();
-      // Emit the message to the receiver's room
       io.to(data.receiver).emit("receiveMessage", newMessage);
       console.log(
         `Message from ${data.sender} (${data.senderModel}) to ${data.receiver} (${data.receiverModel}): ${data.message}`
