@@ -10,6 +10,7 @@ export const ApiProvider = ({ children }) => {
   const [cityLogged,setCityLogged]=useState(false);
   const [cityId,setCityId]=useState("");
   const [departmentLogged,setDepartmentLogged]=useState(false);
+  const [studentLogged,setStudentLogged]=useState(false);
   const [departmentDetails,setDepartmentDetails]=useState({});
   useEffect(() => {
     const fetchData = async () => {
@@ -38,7 +39,9 @@ export const ApiProvider = ({ children }) => {
       ,cityId,
       setCityId,
       departmentLogged,
-      setDepartmentLogged
+      setDepartmentLogged,
+      studentLogged,
+      setStudentLogged
      }}>
       {children}
     </ApiContext.Provider>

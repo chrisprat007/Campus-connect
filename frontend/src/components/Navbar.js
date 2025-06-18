@@ -7,7 +7,7 @@ export default function Navbar() {
         <Link to="/" className="text-white font-bold text-lg">City Cooperation</Link>
         <div className="space-x-4">
           <Link to="/dashboard" className="text-white hover:underline">Dashboard</Link>
-          <Link to="/departments" className="text-white hover:underline">Departments</Link>
+          {/* <Link to="/departments" className="text-white hover:underline">Departments</Link> */}
           <Link to="/collaborate/departments" className="text-white hover:underline">Collaborate</Link>
         </div>
       </div>

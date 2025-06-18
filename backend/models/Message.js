@@ -21,7 +21,13 @@ const MessageSchema = new mongoose.Schema({
   },
   message: {
     type: String,
-    required: true,
+    required: false,
+  },
+  file: {
+    url: String,
+    fileName: String,
+    fileType: String,
+    fileSize: Number
   },
   timestamp: {
     type: Date,
@@ -30,3 +36,4 @@ const MessageSchema = new mongoose.Schema({
 });
 
 export default mongoose.model("Message", MessageSchema);
+

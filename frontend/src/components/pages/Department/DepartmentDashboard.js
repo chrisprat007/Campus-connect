@@ -1,74 +1,102 @@
-import { useEffect, useState } from "react";
-import { FaTasks, FaUsers, FaCog, FaPlus, FaComments } from "react-icons/fa";
+import React, { useState } from "react";
+import { FaUsers, FaComments, FaFileUpload } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import Analytics from "./Analytics";
 import api from "../../../utils/api";
-import AddTaskModal from "./AddTaskModal";  
-import DepartmentTasks from "./DepartmentTasks";
 
 export default function DepartmentDashboard() {
-  const [tasks, setTasks] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);  
   const navigate = useNavigate();
-
   const departmentName = sessionStorage.getItem("departmentName");
   const departmentId = sessionStorage.getItem("departmentId");
+  const [file, setFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  const [message, setMessage] = useState("");
 
-  useEffect(() => {
-    fetchTasks();
-  }, []);
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
 
-  const fetchTasks = async () => {
+  const handleUpload = async () => {
+    if (!file) return;
+
+    setUploading(true);
+    setMessage("");
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("departmentId", departmentId);
+
     try {
-      const response = await api.get(`tasks/${departmentId}`);
-      setTasks(response.data);
+      await api.post("/placements/upload", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      setMessage("Upload successful! Model Training in Process.");
     } catch (error) {
-      console.error("Error fetching tasks:", error);
+      console.error("Upload failed:", error);
+      setMessage("Upload failed. Try again.");
+    } finally {
+      setUploading(false);
+      setFile(null);
     }
   };
 
-  const handleTaskAdded = (newTask) => {
-    setTasks([...tasks, newTask]);
-  };
-
   return (
-    <div className="bg-gray-100 text-gray-900 min-h-screen">
-      <div className="p-6 flex justify-between items-center">
-        <h1 className="text-3xl font-bold">{departmentName}</h1>
-        <button onClick={() => setIsModalOpen(true)} className="p-2 bg-blue-600 text-white rounded-lg flex items-center">
-          <FaPlus className="mr-2" /> Add Task
-        </button>
-      </div>
+    <div className="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+      <nav className="bg-blue-600 p-4 shadow-md">
+        <div className="text-white font-bold text-lg">
+          {departmentName} Department</div>
+      </nav>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
-        <div className="bg-white p-6 rounded-lg shadow-md flex items-center">
-          <FaTasks className="text-4xl text-green-500" />
+        <div
+          className="bg-white p-6 rounded-lg shadow-md flex items-center cursor-pointer"
+          onClick={() => navigate("/departments/students")}
+        >
+          <FaUsers className="text-4xl text-purple-500" />
           <div className="ml-4">
-            <h2 className="text-xl font-semibold">Tasks</h2>
-            <p>{tasks.length}</p>
+            <h2 className="text-xl font-semibold">Manage Students</h2>
+            <p>Add and View Students</p>
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-md flex items-center">
-          <FaCog className="text-4xl text-red-500" />
-          <div className="ml-4">
-            <h2 className="text-xl font-semibold">Settings</h2>
-            <p>Manage department settings</p>
-          </div>
-        </div>
-
-        
-        <div className="bg-white p-6 rounded-lg shadow-md flex items-center cursor-pointer" onClick={() => navigate("/departments/collaborate")}>
+        <div
+          className="bg-white p-6 rounded-lg shadow-md flex items-center cursor-pointer"
+          onClick={() => navigate("/departments/collaborate")}
+        >
           <FaComments className="text-4xl text-blue-500" />
           <div className="ml-4">
             <h2 className="text-xl font-semibold">Collaborate</h2>
             <p>Chat with other departments</p>
           </div>
         </div>
+
+        {/* Excel Upload Section */}
+        <div className="bg-white p-6 rounded-lg shadow-md flex flex-col items-center">
+          <FaFileUpload className="text-4xl text-green-500" />
+          <h2 className="text-xl font-semibold mt-2">Upload Placement Data</h2>
+          <input
+            type="file"
+            accept=".xlsx"
+            onChange={handleFileChange}
+            className="mt-2"
+          />
+          {file && (
+            <button
+              onClick={handleUpload}
+              className="bg-green-500 text-white px-4 py-2 rounded mt-2"
+              disabled={uploading}
+            >
+              {uploading ? "Uploading..." : "Submit"}
+            </button>
+          )}
+          {message && <p className="mt-2 text-center">{message}</p>}
+        </div>
       </div>
 
-      <DepartmentTasks tasks={tasks} setTasks={setTasks} />
-
-      {isModalOpen && <AddTaskModal onClose={() => setIsModalOpen(false)} onTaskAdded={handleTaskAdded} />}
+      <div className="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen p-6 rounded-lg mx-6">
+        <h2 className="text-xl font-semibold mb-4">Placement Analytics</h2>
+        <Analytics id={departmentId} />
+      </div>
     </div>
   );
 }

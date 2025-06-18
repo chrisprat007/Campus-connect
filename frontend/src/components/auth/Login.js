@@ -23,6 +23,7 @@ export default function Login() {
       console.log("Login Success:", response.data);
       setLoading(false);
       setCityLogged(true);
+      sessionStorage.setItem("cityLogged",true);
       sessionStorage.setItem("cityId",response.data.id);
       sessionStorage.setItem("cityName",response.data.name);
       setCityId(response.data.id);
@@ -38,7 +39,7 @@ export default function Login() {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-900 to-indigo-900">
       <div className="bg-gray-900 p-8 rounded-lg shadow-lg w-96">
-        <h2 className="text-3xl font-bold text-white text-center mb-6">Login</h2>
+        <h2 className="text-3xl font-bold text-white text-center mb-6">College Login</h2>
 
         {/* Error Message */}
         {error && <p className="text-red-500 text-sm text-center mb-4">{error}</p>}
@@ -71,19 +72,7 @@ export default function Login() {
           </div>
 
          
-          <div className="flex items-center justify-between text-gray-300">
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                checked={rememberMe}
-                onChange={() => setRememberMe(!rememberMe)}
-                className="mr-2 accent-blue-500"
-              />
-              Remember Me
-            </label>
-            <a href="#" className="text-blue-400 hover:underline">Forgot Password?</a>
-          </div>
-
+        
           {/* Login Button */}
           <button
             type="submit"
@@ -99,9 +88,12 @@ export default function Login() {
         </form>
 
         {/* Register Link */}
-        <p className="text-center text-gray-400 text-sm mt-4">
-          <Link to="/department/login">
+        <p className="text-center text-gray-400 text-sm mt-4 flex flex-col">
+          <Link to="/department/login" className="mb-2">
             Login as Department
+          </Link>
+          <Link to="/student/login">
+            Login as Student
           </Link>
         </p>
       </div>

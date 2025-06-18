@@ -13,19 +13,32 @@ export default function DepartmentLogin() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const {setDepartmentLogged}=useApi();
+  const { setDepartmentLogged } = useApi();
+  const fetchOptions = async () => {
+    try {
+      const departmentsRes = await api.get("/departments/");
+      const collegeRes = await api.get("/city/");
+
+      // Assuming each department/city is an object with a unique "name"
+      const deptArray = departmentsRes.data;
+      const collegeArray = collegeRes.data;
+
+      const uniqueDept = Array.from(
+        new Map(deptArray.map((item) => [item.name, item])).values()
+      );
+
+      const uniqueCollege = Array.from(
+        new Map(collegeArray.map((item) => [item.name, item])).values()
+      );
+
+      setDepartments(uniqueDept);
+      setCities(uniqueCollege);
+    } catch (err) {
+      console.error("Error fetching options", err);
+    }
+  };
+
   useEffect(() => {
-    const fetchOptions = async () => {
-      try {
-        const departmentsRes = await api.get("/departments/");
-        const citiesRes = await api.get("/city/");
-        console.log("value",departmentsRes.data)
-        setDepartments(departmentsRes.data);
-        setCities(citiesRes.data);
-      } catch (err) {
-        console.error("Error fetching options", err);
-      }
-    };
     fetchOptions();
   }, []);
 
@@ -35,18 +48,22 @@ export default function DepartmentLogin() {
     setError("");
     try {
       console.log(secretKey);
-      const response = await api.post("/departments/login", { department, city, secretKey });
-      
+      const response = await api.post("/departments/login", {
+        department,
+        college: city,
+        secretKey,
+      });
+
       setDepartmentLogged(true);
-      if(response.status===200){
+      if (response.status === 200) {
         navigate("/departments/dashboard");
       }
       console.log(response.data);
-      sessionStorage.setItem("departmentId",response.data.departmentId);
-      sessionStorage.setItem("departmentName",response.data.departmentName);
-      sessionStorage.setItem("cityId",response.data.cityId);
-      sessionStorage.setItem("cityName",response.data.cityName);
-      
+      sessionStorage.setItem("departmentLogged", true);
+      sessionStorage.setItem("departmentId", response.data.departmentId);
+      sessionStorage.setItem("departmentName", response.data.departmentName);
+      sessionStorage.setItem("cityId", response.data.collegeId);
+      sessionStorage.setItem("cityName", response.data.collegeName);
     } catch (err) {
       setError(err.response?.data?.message || "Invalid credentials");
     } finally {
@@ -57,8 +74,12 @@ export default function DepartmentLogin() {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-900 to-indigo-900">
       <div className="bg-gray-900 p-8 rounded-lg shadow-lg w-96">
-        <h2 className="text-3xl font-bold text-white text-center mb-6">Department Login</h2>
-        {error && <p className="text-red-500 text-sm text-center mb-4">{error}</p>}
+        <h2 className="text-3xl font-bold text-white text-center mb-6">
+          Department Login
+        </h2>
+        {error && (
+          <p className="text-red-500 text-sm text-center mb-4">{error}</p>
+        )}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="relative">
             <FaBuilding className="absolute left-3 top-3 text-gray-400" />
@@ -70,7 +91,9 @@ export default function DepartmentLogin() {
             >
               <option value="">Select Department</option>
               {departments.map((dep) => (
-                <option key={dep.id} value={dep.name}>{dep.name}</option>
+                <option key={dep.id} value={dep.name}>
+                  {dep.name}
+                </option>
               ))}
             </select>
           </div>
@@ -85,7 +108,9 @@ export default function DepartmentLogin() {
             >
               <option value="">Select City</option>
               {cities.map((ct) => (
-                <option key={ct.id} value={ct.name}>{ct.name}</option>
+                <option key={ct.id} value={ct.name}>
+                  {ct.name}
+                </option>
               ))}
             </select>
           </div>
@@ -114,10 +139,11 @@ export default function DepartmentLogin() {
             )}
           </button>
         </form>
-        <p className="text-center text-gray-400 text-sm mt-4">
-          <Link to="/city/login">
-            Login as City
+        <p className="text-center text-gray-400 text-sm mt-4 flex flex-col">
+          <Link to="/college/login" className="mb-2">
+            Login as College
           </Link>
+          <Link to="/student/login">Login as Student</Link>
         </p>
       </div>
     </div>

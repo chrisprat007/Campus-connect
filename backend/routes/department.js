@@ -1,7 +1,8 @@
 import express from "express";
 import Department from "../models/Department.js";
 import College from "../models/College.js";
-
+import Student from "../models/Student.js";
+import mongoose from "mongoose";
 const router = express.Router();
 
 router.post("/add", async (req, res) => {
@@ -31,6 +32,26 @@ router.get("/:collegeId", async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: "Failed to fetch departments" });
     }
+});
+
+router.get("/students/:departmentId", async (req, res) => {
+  try {
+    const { departmentId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(departmentId)) {
+      return res.status(400).json({ error: "Invalid departmentId" });
+    }
+    console.log(req.params);
+
+    const students = await Student.find({ department: departmentId })
+      .populate("college", "name")      // optional: populate college name
+      .populate("department", "name");  // optional: populate department name
+
+    res.status(200).json({ students });
+  } catch (error) {
+    console.error("Error fetching students:", error);
+    res.status(500).json({ error: "Failed to fetch students" });
+  }
 });
 
 router.post("/login", async (req, res) => {

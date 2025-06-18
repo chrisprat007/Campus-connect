@@ -68,18 +68,9 @@ export default function DepartmentList() {
             <div key={dept._id} className="relative bg-indigo-900 p-6 rounded-xl shadow-lg border border-gray-700 transition-transform transform hover:scale-105 hover:shadow-2xl">
               <h2 className="text-xl font-semibold text-white">{dept.name}</h2>
               <p className="text-sm text-gray-200 mt-1">{dept.role}</p>
-              <p className="text-sm text-gray-200 mt-2">City: {dept.city?.name || "N/A"}</p>
+              <p className="text-sm text-gray-200 mt-2">College: {dept.college?.name || "N/A"}</p>
 
-              <h3 className="font-medium text-white mt-3">Tasks:</h3>
-              {dept.tasks.length > 0 ? (
-                <ul className="mt-1 space-y-1 text-gray-200">
-                  {dept.tasks.map((task) => (
-                    <li key={task._id} className="text-sm">- {task.name}</li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="text-sm text-gray-400">No tasks available</p>
-              )}
+              
 
               <div className="absolute top-2 right-2 px-3 py-1 text-xs bg-blue-600 text-white rounded-full">
                 {dept.role}

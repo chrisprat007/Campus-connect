@@ -14,6 +14,7 @@ router.get("/", async (req, res) => {
         { sender: receiver, senderModel: receiverModel, receiver: sender, receiverModel: senderModel },
       ],
     }).sort({ timestamp: 1 });
+   
 
     res.status(200).json({ messages });
   } catch (error) {
