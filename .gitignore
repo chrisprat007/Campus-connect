@@ -1,0 +1,72 @@
+# =====================
+# Node Modules
+# =====================
+node_modules/
+**/node_modules/
+
+# =====================
+# Environment Files
+# =====================
+.env
+.env.*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# =====================
+# Logs
+# =====================
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# =====================
+# Build Folders
+# =====================
+build/
+dist/
+.next/
+out/
+coverage/
+
+# =====================
+# OS Files
+# =====================
+.DS_Store
+Thumbs.db
+
+# =====================
+# VS Code
+# =====================
+.vscode/
+
+# =====================
+# IDE Files
+# =====================
+.idea/
+*.swp
+
+# =====================
+# Temporary Files
+# =====================
+*.tmp
+*.temp
+
+# =====================
+# MongoDB
+# =====================
+data/
+dump/
+
+# =====================
+# React
+# =====================
+frontend/build/
+
+# =====================
+# Misc
+# =====================
+.cache/
