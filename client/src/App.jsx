@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import Sidebar from './components/Sidebar'
 
-// Pages
+//Pages
 import Login                from './pages/Login'
 import StudentDashboard     from './pages/student/Dashboard'
 import Profile              from './pages/student/Profile'
